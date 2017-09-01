@@ -1,48 +1,49 @@
--- VOTES
---  id | jumbled_user_id | in_favor | gender | age |         createdAt          |         updatedAt          | issueId | cityId
--- ----+-----------------+----------+--------+-----+----------------------------+----------------------------+---------+--------
---  27 | psy37v          | f        | male   |  16 | 2017-08-31 10:53:44.859-04 | 2017-08-31 10:53:44.916-04 |       4 |      5
+-- Questions
 --
--- CITIES
---  id |  name   |         createdAt         |         updatedAt          | stateId
--- ----+---------+---------------------------+----------------------------+---------
---   5 | Phoenix | 2017-08-31 10:53:40.46-04 | 2017-08-31 10:53:42.194-04 |       6
---
--- ISSUES
---  id |            description            |         createdAt          |         updatedAt
--- ----+-----------------------------------+----------------------------+----------------------------
---   1 | All parents receive Friday's off. | 2017-08-31 10:53:39.883-04 | 2017-08-31 10:53:39.883-04
---
--- STATES
---  id |   name   |         createdAt          |         updatedAt
--- ----+----------+----------------------------+----------------------------
---   1 | New York | 2017-08-31 10:53:39.914-04 | 2017-08-31 10:53:39.914-04
+-- You can write as many queries as required to get the answers to the following questions. You do not need to solve this in one query.
 
---   Which state had the most votes placed?
---   What percentage of cities passed the minimum wage issue (> 50% of votes)?
---   How many of the issues were approved in each of the following cities? An issue is 'approved' if it got more than 50% of the votes.
+-- Were there more male or female voters in Greensboro?
+SELECT * FROM cities WHERE name = 'Greensboro';
+SELECT count(id) FROM votes WHERE gender = 'female' AND "cityId" = 68;
+SELECT count(id) FROM votes WHERE gender = 'male' AND "cityId" = 68;
+
+-- What is the average age of voters in Orlando?
+SELECT * FROM cities WHERE name = 'Orlando';
+SELECT AVG(age) FROM votes WHERE "cityId" = 77;
+
+-- Which state has the most cities listed?
+SELECT count(id), "stateId" FROM cities  GROUP BY  "stateId" ORDER BY count(id) DESC;
+SELECT * FROM states WHERE id = 3;
+
+-- Which state had the most votes placed?
+SELECT count("cityId"), "stateId" FROM votes JOIN cities ON cities.id = votes."cityId" GROUP BY  "stateId" ORDER BY count("cityId") DESC;
+SELECT * FROM states WHERE id = 3;
+
+-- What percentage of cities passed the minimum wage issue (> 50% of votes)?
+voterdb=# SELECT count(*) from (SELECT count(id), "cityId" FROM votes WHERE "issueId" = 2 AND in_favor = 'f' GROUP BY "cityId" HAVING count(id) > 100) AS pants;
+
+
+
+
+-- How many of the issues were approved in each of the following cities? An issue is 'approved' if it got more than 50% of the votes.
 -- Dallas
+Select * from cities where name = 'Dallas';
+select count(id), "issueId" from votes where "cityId" = 8 and in_favor = true Group by "issueId";
+
 -- Atlanta
+Select * from cities where name = 'Atlanta';
+select count(id), "issueId" from votes where "cityId" = 40 and in_favor = true Group by "issueId";
+
 -- Anaheim
+Select * from cities where name = 'Anaheim';
+ select count(id), "issueId" from votes where "cityId" = 56 and in_favor = true Group by "issueId";
+
 -- Boston
+Select * from cities where name = 'Boston';
+select count(id), "issueId" from votes where "cityId" = 24 and in_favor = true Group by "issueId";
 
 -- Hard mode
+--
 -- Do you see any signs of election fraud (the same person voting for the same issue more than once)?
-
---   Were there more male or female voters in Greensboro?
-Female (404) Male (396)
---   What is the average age of voters in Orlando?
- 51.4562500000000000
---   Which state has the most cities listed?
-California
-SELECT title, domestic_sales, international_sales
-FROM movies
-  JOIN boxoffice
-    ON movies.id = boxoffice.movie_id;
-
-SELECT count(votes.id), "cityId", "stateId"
-FROM votes
-JOIN cities
-ON cities.id = votes."cityId"
-GROUP BY "cityId"
-GROUP BY "stareId";
+--
+select * from votes where jumbled_user_id = 'g2qwi' and "issueId" = 2;
